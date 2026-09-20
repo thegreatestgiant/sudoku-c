@@ -39,23 +39,26 @@ void board_destroy(SudokuBoard **board_ptr) {
     free(*board_ptr);
     *board_ptr = NULL;
   }
-  (void)board_ptr;
 }
 
+/* STUDENT TODO 2: Return the mutable cell pointer for this coordinate. */
 int *board_cell(SudokuBoard *board, int row, int column) {
-  /* STUDENT TODO 2: Return the mutable cell pointer for this coordinate. */
-  (void)board;
-  (void)row;
-  (void)column;
-  return NULL;
+  if (board == NULL || board->cells == NULL ||
+      !board_coordinates_in_range(row, column)) {
+    return NULL;
+  }
+  int *mut = board->cells + row * SUDOKU_SIZE + column;
+  return mut;
 }
 
+/* STUDENT TODO 2: Return the read-only cell pointer for this coordinate. */
 const int *board_cell_const(const SudokuBoard *board, int row, int column) {
-  /* STUDENT TODO 2: Return the read-only cell pointer for this coordinate. */
-  (void)board;
-  (void)row;
-  (void)column;
-  return NULL;
+  if (board == NULL || board->cells == NULL ||
+      !board_coordinates_in_range(row, column)) {
+    return NULL;
+  }
+  const int *con = board->cells + row * SUDOKU_SIZE + column;
+  return con;
 }
 
 void board_clear(SudokuBoard *board) {
