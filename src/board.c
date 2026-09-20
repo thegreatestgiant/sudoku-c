@@ -10,9 +10,8 @@ SudokuBoard *board_create(void) {
   /* STUDENT TODO 1: Implement the complete board constructor. */
   SudokuBoard *board;
   board = calloc(1, sizeof(SudokuBoard));
-  if (board == NULL) {
+  if (board == NULL)
     return NULL;
-  }
   board->cells = NULL;
   int *cells = calloc(81, sizeof(*cells));
   if (cells == NULL) {
@@ -25,8 +24,20 @@ SudokuBoard *board_create(void) {
 
 SudokuBoard *board_clone(const SudokuBoard *source) {
   /* STUDENT TODO 3: Return a separate board with independent cell storage. */
-  (void)source;
-  return NULL;
+  if (source == NULL || source->cells == NULL)
+    return NULL;
+  SudokuBoard *board;
+  board = board_create();
+  if (board == NULL)
+    return NULL;
+  for (int row = 0; row < SUDOKU_SIZE; row++) {
+    for (int col = 0; col < SUDOKU_SIZE; col++) {
+      int *cell = board_cell(board, row, col);
+      const int *cop = board_cell_const(source, row, col);
+      *cell = *cop;
+    }
+  }
+  return board;
 }
 
 void board_destroy(SudokuBoard **board_ptr) {
