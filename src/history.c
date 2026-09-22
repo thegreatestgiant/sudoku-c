@@ -17,7 +17,7 @@ void history_init(MoveHistory *history) {
 
 /* STUDENT TODO 4: Append one move to the resizable history array. */
 int history_push(MoveHistory *history, Move move) {
-  if (history == NULL) {
+  if (!history) {
     return 0;
   }
   if (history->count < history->capacity) {
@@ -46,7 +46,6 @@ int history_pop(MoveHistory *history, Move *result) {
   }
   Move *move = history->items + --history->count;
   *result = *move;
-
   return 1;
 }
 

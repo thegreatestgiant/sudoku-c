@@ -1,7 +1,10 @@
 include/*
 build/*
 sudoku
+sudoku_san
 test_sudoku
+test_sudoku_san
 test_alloc_fail
+test_alloc_fail_san
 .vscode/**
 tests/**

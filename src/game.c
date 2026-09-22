@@ -45,11 +45,9 @@ void game_destroy(SudokuGame **game_ptr) {
   }
   board_destroy(&((*game_ptr)->puzzle));
   board_destroy(&((*game_ptr)->solution));
-  (*game_ptr)->solution = NULL;
   free((*game_ptr)->fixed);
-  (*game_ptr)->solution = NULL;
-  free((*game_ptr)->history.items);
-  (*game_ptr)->history.items = NULL;
+  (*game_ptr)->fixed = NULL;
+  history_destroy(&(*game_ptr)->history);
   free(*game_ptr);
   *game_ptr = NULL;
 }
@@ -59,6 +57,9 @@ void game_destroy(SudokuGame **game_ptr) {
  * A failed replacement must leave an existing game unchanged.
  */
 int game_start_new(SudokuGame *game, Difficulty difficulty) {
+  if (!game) {
+    return 0;
+  }
   int holes = sudoku_holes_for_difficulty(difficulty);
   SudokuBoard *solution = sudoku_generate_solution();
   if (!solution) {
@@ -78,17 +79,9 @@ int game_start_new(SudokuGame *game, Difficulty difficulty) {
     free(fixed);
     return 0;
   }
-  MoveHistory history;
-  history_init(&history);
-  if (game->solution) {
-    SudokuBoard *old_sol = game->solution;
-    board_destroy(&old_sol);
-  }
+  board_destroy(&game->solution);
   game->solution = solution;
-  if (game->puzzle) {
-    SudokuBoard *old_puzzle = game->puzzle;
-    board_destroy(&old_puzzle);
-  }
+  board_destroy(&game->puzzle);
   game->puzzle = puzzle;
   if (game->fixed) {
     unsigned char *old_fixed = game->fixed;
@@ -96,6 +89,9 @@ int game_start_new(SudokuGame *game, Difficulty difficulty) {
     old_fixed = NULL;
   }
   game->fixed = fixed;
+  MoveHistory history;
+  history_init(&history);
+  history_destroy(&game->history);
   game->history = history;
   game->difficulty = difficulty;
   game->active = 1;
