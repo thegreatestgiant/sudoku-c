@@ -1,8 +1,8 @@
-#include "board.h"
-#include "command.h"
-#include "game.h"
-#include "history.h"
-#include "sudoku.h"
+#include "../include/board.h"
+#include "../include/command.h"
+#include "../include/game.h"
+#include "../include/history.h"
+#include "../include/sudoku.h"
 
 #include <assert.h>
 #include <stdio.h>

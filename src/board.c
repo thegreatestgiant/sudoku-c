@@ -1,5 +1,4 @@
-
-#include <board.h>
+#include "../include/board.h"
 #include <stdlib.h>
 
 int board_coordinates_in_range(int row, int column) {
@@ -40,8 +39,8 @@ SudokuBoard *board_clone(const SudokuBoard *source) {
   return board;
 }
 
+/* STUDENT TODO 1: Release a board and clear the caller's pointer. */
 void board_destroy(SudokuBoard **board_ptr) {
-  /* STUDENT TODO 1: Release a board and clear the caller's pointer. */
   if (board_ptr != NULL && *board_ptr != NULL) {
     if ((*board_ptr)->cells != NULL) {
       free((*board_ptr)->cells);
