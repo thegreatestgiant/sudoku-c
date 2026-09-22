@@ -54,15 +54,52 @@ void game_destroy(SudokuGame **game_ptr) {
   *game_ptr = NULL;
 }
 
+/*
+ * STUDENT TODO 6: Replace the current game with a newly generated one.
+ * A failed replacement must leave an existing game unchanged.
+ */
 int game_start_new(SudokuGame *game, Difficulty difficulty) {
-  /*
-   * STUDENT TODO 6: Replace the current game with a newly generated one.
-   * A failed replacement must leave an existing game unchanged.
-   */
-  (void)game;
-  (void)difficulty;
-  (void)create_fixed_map;
-  return 0;
+  int holes = sudoku_holes_for_difficulty(difficulty);
+  SudokuBoard *solution = sudoku_generate_solution();
+  if (!solution) {
+    board_destroy(&solution);
+    return 0;
+  }
+  SudokuBoard *puzzle = sudoku_generate_puzzle(solution, difficulty, &holes);
+  if (!puzzle) {
+    board_destroy(&solution);
+    board_destroy(&puzzle);
+    return 0;
+  }
+  unsigned char *fixed = create_fixed_map(puzzle);
+  if (!fixed) {
+    board_destroy(&solution);
+    board_destroy(&puzzle);
+    free(fixed);
+    return 0;
+  }
+  MoveHistory history;
+  history_init(&history);
+  if (game->solution) {
+    SudokuBoard *old_sol = game->solution;
+    board_destroy(&old_sol);
+  }
+  game->solution = solution;
+  if (game->puzzle) {
+    SudokuBoard *old_puzzle = game->puzzle;
+    board_destroy(&old_puzzle);
+  }
+  game->puzzle = puzzle;
+  if (game->fixed) {
+    unsigned char *old_fixed = game->fixed;
+    free(old_fixed);
+    old_fixed = NULL;
+  }
+  game->fixed = fixed;
+  game->history = history;
+  game->difficulty = difficulty;
+  game->active = 1;
+  return 1;
 }
 
 int game_cell_is_fixed(const SudokuGame *game, int row, int column) {

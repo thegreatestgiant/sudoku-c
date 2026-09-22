@@ -1,4 +1,4 @@
-#include "history.h"
+#include "../include/history.h"
 
 #include <stdint.h>
 #include <stdlib.h>
